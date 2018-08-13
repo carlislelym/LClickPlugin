@@ -1,2 +1,3 @@
 # LClickPlugin
-Windows click plugin
+Windows click plugin(Just for windows platform)
+
