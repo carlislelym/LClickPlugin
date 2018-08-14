@@ -1,4 +1,4 @@
-#ifndef __STDAFX_H__
+﻿#ifndef __STDAFX_H__
 #define __STDAFX_H__
 
 #include <Windows.h>

@@ -1,22 +1,22 @@
-#ifndef __LCLICKPLUGIN_H__
+ï»¿#ifndef __LCLICKPLUGIN_H__
 #define __LCLICKPLUGIN_H__
 
 /*
-*****ÊµÏÖ¹¦ÄÜ*****
-* °´ esc ÍË³öµã»÷Ä£Ê½
-* °´ ctrl+s ½øĞĞÑ¡Ôñµã»÷Î»ÖÃ
-* µã»÷Ö®ºóÂíÉÏ¿ªÊ¼°´ÕÕÉèÖÃºÃµÄÄ£Ê½½øĞĞµã»÷
-* ĞèÒªÒ»¸öÀàËÆ½ØÆÁÈí¼şµÄĞ¡´°¿Ú½øĞĞÄ£Ê½ÉèÖÃÖ®ÀàµÄ²Ù×÷
+*****å®ç°åŠŸèƒ½*****
+* æŒ‰ esc é€€å‡ºç‚¹å‡»æ¨¡å¼
+* æŒ‰ ctrl+s è¿›è¡Œé€‰æ‹©ç‚¹å‡»ä½ç½®
+* ç‚¹å‡»ä¹‹åé©¬ä¸Šå¼€å§‹æŒ‰ç…§è®¾ç½®å¥½çš„æ¨¡å¼è¿›è¡Œç‚¹å‡»
+* éœ€è¦ä¸€ä¸ªç±»ä¼¼æˆªå±è½¯ä»¶çš„å°çª—å£è¿›è¡Œæ¨¡å¼è®¾ç½®ä¹‹ç±»çš„æ“ä½œ
 * 
-*****ÔöÇ¿¹¦ÄÜ*****
-* °´ ctrl+m ½øĞĞ¶àÖØµã»÷Ñ¡Ôñ
-* ÀàËÆÂ¼ÖÆºêÒ»Ñù£¬±£´æ¸Õ¸ÕµÄÒ»¶Î²Ù×÷
-* Ö§³Ö°´Â·¾¶£¬ÑØ×ÅÓÃ»§»­µÄÂ·¾¶½øĞĞµã»÷
+*****å¢å¼ºåŠŸèƒ½*****
+* æŒ‰ ctrl+m è¿›è¡Œå¤šé‡ç‚¹å‡»é€‰æ‹©
+* ç±»ä¼¼å½•åˆ¶å®ä¸€æ ·ï¼Œä¿å­˜åˆšåˆšçš„ä¸€æ®µæ“ä½œ
+* æ”¯æŒæŒ‰è·¯å¾„ï¼Œæ²¿ç€ç”¨æˆ·ç”»çš„è·¯å¾„è¿›è¡Œç‚¹å‡»
 * 
-*****´ı°ì·½°¸*****
-* 1. ¶àÏß³Ì½øĞĞ
-* 2. °²×°hook²¶»ñ¼üÅÌ°´¼ü À´½øĞĞ¿ØÖÆ
-* 3. SendInput()½øĞĞ·¢ËÍµã»÷»òÕß¼üÅÌ
+*****å¾…åŠæ–¹æ¡ˆ*****
+* 1. å¤šçº¿ç¨‹è¿›è¡Œ
+* 2. å®‰è£…hookæ•è·é”®ç›˜æŒ‰é”® æ¥è¿›è¡Œæ§åˆ¶
+* 3. SendInput()è¿›è¡Œå‘é€ç‚¹å‡»æˆ–è€…é”®ç›˜
 */
 
 class LClickPlugin
@@ -27,6 +27,14 @@ public:
 		DEFAULT,
 		RANDOM,
 	};
+
+	enum Status 
+	{
+		Waiting,
+		Ready,
+		Selecting,
+		Working,
+	};
 public:
 	LClickPlugin();
 	~LClickPlugin();
@@ -34,16 +42,25 @@ public:
 	void start();
 	void stop();
 
+	INTERVAL_MODE mode();
+	Status nowStatus();
+	int intervalMilliSec();
+	int maxLimitMilliSec();
+
+	void setStatus(Status status);
+	void setMode(INTERVAL_MODE mode);
 	void setAbsolutePos(int x, int y);
-	void setIntervalTime(int millisecond, INTERVAL_MODE mode, int maxLimit = 10000);
+	void setMaxLimitTime(int millisecond);
+	void setIntervalTime(int millisecond);
 
 private:
 	int m_xPos;
 	int m_yPos;
 
-	INTERVAL_MODE m_mode;
-	int m_maxLimit;
-	int m_intervalMilliSec;
+	Status			m_status;
+	INTERVAL_MODE	m_mode;
+	int				m_maxLimit;		// æœ€è¿Ÿçš„é—´éš”æ—¶é—´
+	int				m_intervalMilliSec;		// æ¨¡æ‹Ÿé¼ æ ‡ç‚¹å‡»çš„é—´éš”æ—¶é—´
 };
 
 #endif	// __LCLICKPLUGIN_H__

@@ -1,12 +1,13 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "lclickplugin.h"
 
 LClickPlugin::LClickPlugin()
 	: m_xPos(0)
 	, m_yPos(0)
+	, m_status(Waiting)
 	, m_mode(DEFAULT)
-	, m_maxLimit(10000)
-	, m_intervalMilliSec(50)
+	, m_maxLimit(1000)
+	, m_intervalMilliSec(200)
 {
 }
 
@@ -17,8 +18,7 @@ LClickPlugin::~LClickPlugin()
 
 void LClickPlugin::start()
 {
-	SetCursorPos(m_xPos, m_yPos);
-	while (true)
+	while (m_status == Working)
 	{
 		mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 		switch (m_mode)
@@ -37,7 +37,37 @@ void LClickPlugin::start()
 
 void LClickPlugin::stop()
 {
+	m_status = Ready;
+}
 
+LClickPlugin::INTERVAL_MODE LClickPlugin::mode()
+{
+	return m_mode;
+}
+
+int LClickPlugin::intervalMilliSec()
+{
+	return m_intervalMilliSec;
+}
+
+int LClickPlugin::maxLimitMilliSec()
+{
+	return m_maxLimit;
+}
+
+LClickPlugin::Status LClickPlugin::nowStatus()
+{
+	return m_status;
+}
+
+void LClickPlugin::setStatus(Status status)
+{
+	m_status = status;
+}
+
+void LClickPlugin::setMode(INTERVAL_MODE mode)
+{
+	m_mode = mode;
 }
 
 void LClickPlugin::setAbsolutePos(int x, int y)
@@ -48,10 +78,16 @@ void LClickPlugin::setAbsolutePos(int x, int y)
 	m_yPos = y;
 }
 
-void LClickPlugin::setIntervalTime(int millisecond, INTERVAL_MODE mode, int maxLimit)
+void LClickPlugin::setMaxLimitTime(int millisecond)
 {
-	if (millisecond < 0 || maxLimit < 0)
+	if (millisecond < 0)
+		return;
+	m_maxLimit = millisecond;
+}
+
+void LClickPlugin::setIntervalTime(int millisecond)
+{
+	if (millisecond < 0)
 		return;
 	m_intervalMilliSec = millisecond;
-	m_maxLimit = maxLimit;
 }
